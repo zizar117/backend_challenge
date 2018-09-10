@@ -54,7 +54,7 @@
             </div>
             
             <div class="row">
-              <input id="create" class="btn hide" type="" value="Save" />
+              <input id="create" class="btn" type="" value="Save" />
             </div>
           </form>
       </div>
@@ -92,7 +92,7 @@
               },
 
               self.Events = function(){
-                $("#create").on("change",function(){
+                $("#create").on("click",function(){
                   if( self.validatePwd($("#password").val(), $("#confirm_password").val() )){
                     self.CreateUser();
                   }else{
@@ -101,8 +101,8 @@
                 })
               },
 
-              self.validatePwd=function(pwd1,pwd2){
-                if( pwd1 != pwd2 ){
+              self.validatePwd=function(pwd1="",pwd2=""){
+                if( (pwd1 == "" || pdw2 =="") || (pwd1 != pwd2) ){
                   return false;
                 }else{
                   return true
@@ -113,7 +113,7 @@
                 self.Events();
               }
             };
-            User.init();
+            new User().init();
           })();
             
       </script>

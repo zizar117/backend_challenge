@@ -2,23 +2,15 @@ var express = require('express');
 var bodyParser = require("body-parser");
 var mongoose = require('mongoose');
 
+var userService = require('./app/services/UserService');
+var responses = require('./app/models/responses')
+
 var app = express();
 
 // indicates the static resources form app
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-// MONGOSE CONNECTION TO DB
-var mongoDB = 'mongodb://127.0.0.1:27017/nodejschallenge';
-mongoose.connect(mongoDB);
-
-//Get the default connection
-var db = mongoose.connection;
-
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 
 // get homepage
 app.get('/index.htm', function (req, res) {
@@ -30,10 +22,13 @@ app.post('/',function(req,res){
     var user = req.body.user;
     try{
         if( validateRequest(req) ){
-            // TODO Create User
+            var uService = userService.CreateUserService(user)
+            res.end( JSON.stringify(responses.successResponse("success", 200, uService.CreateUser() )) );
+        }else{
+            res.end( JSON.stringify(responses.badRequest("Invalid Request",400,"Invalid request")));
         }
     }catch(e){
-        res.end( JSON.stringify(responses.serverError()));
+        res.end( JSON.stringify(responses.badRequest(e,400,"Invalid request")));
     }
 });
 
@@ -47,7 +42,7 @@ function IsValidToken(token = undefined, action=undefined){
 
 // Validates the incoming object attributes
 function validateRequest(req=undefined){
-    if(req == undefined) return false;
+    if(req == undefined || req.body.user == undefined) return false;
 
     // TODO: Create and Validate Token
     if( !IsValidToken("req_token_goes_here") || false){
