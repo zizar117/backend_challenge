@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <style>
+            #map {
+                height: 500px;
+                width: 100%;
+            }
+            i.dir_user{
+              color: red;
+            }
+            i.dir_car{
+              color: green;
+            }
+            .loader{
+              text-align: center;
+            }
+        </style>
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+  <body>
+
+      
+    <div class="row container ">
+      <div class="row loader hide">
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="main_content row">
+          <h2>Test drivers</h2>
+          <form id="general" class="col s12" action="/map" method="post">
+            <div class="row">
+              <div class="input-field col s6">
+                <i class="dir_car material-icons prefix">directions_car</i>
+                <input id="drivers" type="number" class="validate" name="drivers" max="5">
+                <label for="drivers">Drivers</label>
+              </div>
+              <div class="input-field col s6">
+                <i class="dir_user material-icons prefix">directions_walk</i>
+                <input id="users" type="number" class="validate" name="users" max="5">
+                <label for="users">Users</label>
+              </div>
+            </div>
+            
+            <div class="row">
+              <input id="search" class="btn hide" type="" value="create" />
+              <input id="pause" class="btn hide" type="" value="pause" />
+            </div>
+          </form>
+          <div class="map-container container">
+              <div id="map"></div>
+          </div>
+      </div>
+      
+    </div>
+      
+
+    <div class="hide">
+        <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDI8Osr696gx40sqjWaNg9f6EDvcFLgYGQ&callback=initMap">
+        </script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+    </div>
+      
+      <script>
+      (function(){
+          var UserJS = function(){
+              self = this;
+              
+              self.Create = function(){
+                  $.ajax({
+                    url: "/users/"+user.id+"/driver",
+                    method: "post",
+                    beforeSend: function(xhr){
+                    xhr.setRequestHeader("Content-Type","application/json");
+                    },
+                    data: JSON.stringify({coords: [user.coords.lat, user.coords.lng]}),
+                    success: function (resp) {
+                    if(resp = JSON.parse(resp), resp.success)
+                        user.driver = resp.data;
+                        user.driver.newPosMarkers = [];
+                    },
+                    error: function (err) {
+                    console.log(err)
+                    },
+                }); // end ajax
+              } // end Create
+          }
+      })();
+          var 
+          _drivers = $("#drivers"), _users=$("#users"), _pause=$("#pause"), _search = $("#search"),
+          map,arrMarkersDriver=[], arrMarkersUsers=[], arrDirectionDisplay=[], arrNewDriversPos =[], directionsDisplay, directionsService, rendererOptions,
+          centerCoords = {lat: 19.410672, lng: -99.16078}, range = 0.002;
+          var arrUsers = [], arrDrivers = [], loop=1,driverPos;
+
+          // Global variables
+          setTimeout(function(){
+            $(".main_content").removeClass("hide"), $(".loader").addClass("hide"),_search.removeClass("hide");
+          },3300);
+          
+          // Handle number on users selection
+          _users.on("change",function(){
+            if( $(this).val($(this).val()>$(this).attr("max")?$(this).attr("max"):$(this).val()), _drivers.val()<_users.val()){
+              _drivers.val(_users.val())
+            }
+          });
+          _drivers.on("change",function(){
+            $(this).val($(this).val()>$(this).attr("max")?$(this).attr("max"):$(this).val())
+          });
+
+          // Handle pause click
+          _pause.on("click",function(){
+              if( $(this).hasClass("paused")) 
+                $(this).removeClass("paused"), $(this).val("pause"), initIntervals(loop);
+              else
+                $(this).addClass("paused"), $(this).val("continue"), clearInterval(driverPos);
+          });
+
+            
+      </script>
+   </body>
+</html>
+

@@ -1,0 +1,24 @@
+{
+  "name": "nodejs-coding-challenge",
+  "version": "1.0.0",
+  "description": "NodeJS Coding Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zizar117/nodejs-coding-challenge.git"
+  },
+  "author": "Cesar A Rosas Sanchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zizar117/nodejs-coding-challenge/issues"
+  },
+  "homepage": "https://github.com/zizar117/nodejs-coding-challenge#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-vue": "^5.7.1"
+  }
+}

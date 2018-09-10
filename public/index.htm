@@ -1,0 +1,122 @@
+<html>
+    <head>
+        <style>
+            #map {
+                height: 500px;
+                width: 100%;
+            }
+            i.dir_user{
+              color: red;
+            }
+            i.dir_car{
+              color: green;
+            }
+            .loader{
+              text-align: center;
+            }
+        </style>
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+  <body>
+
+      
+    <div class="row container ">
+      <div class="row loader hide">
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="main_content row">
+          <h2>NodeJS COding Challenge</h2>
+          <form id="general" class="col s12" action="/map" method="post">
+            <div class="row">
+              <div class="input-field col s6">
+                <input id="email" type="number" required class="validate" name="email" placeholder="Email">
+                <label for="email">Email</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="password" type="password" required class="validate" name="password" placeholder="Password">
+                <label for="users">Password</label>
+              </div>
+              <div class="input-field col s6">
+                <input id="confirm_password" type="password" required class="validate" placeholder="Confirm Password">
+                <label for="users">Confirm Password</label>
+              </div>
+            </div>
+            
+            <div class="row">
+              <input id="create" class="btn hide" type="" value="Save" />
+            </div>
+          </form>
+      </div>
+      
+    </div>
+      
+
+    <div class="hide">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+    </div>
+      
+      <script>
+          (function(){
+            var User = function(){
+              var self = this;
+
+              self.CreateUser = function(){
+
+                $.ajax({
+                    url: "/",
+                    method: "post",
+                    beforeSend: function(xhr){
+                      xhr.setRequestHeader("Content-Type","application/json");
+                    },
+                    data: JSON.stringify({user: {email: $("#email").val(),password:$("password").val()}}),
+                    success: function (resp) {
+                    if(resp = JSON.parse(resp), resp.success)
+                        alert("Sucess!")
+                    },
+                    error: function (err) {
+                    console.log(err)
+                    },
+                }); // end ajax
+              },
+
+              self.Events = function(){
+                $("#create").on("change",function(){
+                  if( self.validatePwd($("#password").val(), $("#confirm_password").val() )){
+                    self.CreateUser();
+                  }else{
+                    alert("Passwords don't match");
+                  }
+                })
+              },
+
+              self.validatePwd=function(pwd1,pwd2){
+                if( pwd1 != pwd2 ){
+                  return false;
+                }else{
+                  return true
+                }
+              },
+
+              self.init = function(){
+                self.Events();
+              }
+            };
+            User.init();
+          })();
+            
+      </script>
+   </body>
+</html>
+
