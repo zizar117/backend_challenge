@@ -7,17 +7,20 @@ var UserService = function(){
 
     // Validates User Attributes
     self.CreateUser = function(){
+        console.info("Creating user in Service");
         if( !self.Validate() ){
             throw "Invalid User Object";
         }
-        return userRepository.CreateUserRepository().CreateUser(user);
+        console.info("Success validation in service");
+        return userRepository.CreateUserRepository(self.User).CreateUser();
     }
 
     // Validaes Buisiness Object
     self.Validate = function(){
-    
+        console.info("Validating UserService", self.User)
+
         if(self.User == undefined) return false;
-        if(self.User.id == undefined || self.User.id != 0) return false;
+        if(self.User.id ) return false;
         if(self.User.email == undefined || self.User.email == "") return false;
         if( self.User.password == "" ) return false;
 
@@ -26,9 +29,11 @@ var UserService = function(){
 }
 
 exports.CreateUserService = function(user=undefined){
+
+    console.info("CreateUserService ",user);
     if(user === undefined) throw "Invalid User";
 
     var mUserService = new UserService();
-    mUserService.User = mUser;
+    mUserService.User = user;
     return mUserService;
 }

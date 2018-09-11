@@ -33,8 +33,8 @@ exports.CreateUserSchema = function(user = undefined){
     if(user == undefined) return undefined;
 
     var userSchema = new User({
-        name: user.name,
-        coords: user.coords,
+        email: user.email,
+        hashed_password: user.password,
         status: user.status
     })
     return userSchema;

@@ -40,7 +40,7 @@
           <form id="general" class="col s12" action="/map" method="post">
             <div class="row">
               <div class="input-field col s6">
-                <input id="email" type="number" required class="validate" name="email" placeholder="Email">
+                <input id="email" type="email" required class="validate" name="email" placeholder="Email">
                 <label for="email">Email</label>
               </div>
               <div class="input-field col s6">
@@ -80,7 +80,7 @@
                     beforeSend: function(xhr){
                       xhr.setRequestHeader("Content-Type","application/json");
                     },
-                    data: JSON.stringify({user: {email: $("#email").val(),password:$("password").val()}}),
+                    data: JSON.stringify({user: {email: $("#email").val(),password:$("#password").val()}}),
                     success: function (resp) {
                     if(resp = JSON.parse(resp), resp.success)
                         alert("Sucess!")
@@ -102,7 +102,7 @@
               },
 
               self.validatePwd=function(pwd1="",pwd2=""){
-                if( (pwd1 == "" || pdw2 =="") || (pwd1 != pwd2) ){
+                if( (pwd1 == "" || pwd2 =="") || (pwd1 != pwd2) ){
                   return false;
                 }else{
                   return true
