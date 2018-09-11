@@ -2,6 +2,7 @@ var userSchema = require('../schemas/UserSchema');
 var mongoose = require("mongoose");
 
 var util = require('../util/util');
+var crypt = require('../util/crypt');
 
 var UserRepository = function(){
 
@@ -52,14 +53,16 @@ var UserRepository = function(){
             us.findById(id, function(err,user){
                 if(err) throw err;
                 self.User = user;
-                return self.User;
             });
         });
+        return self.User;
     },
 
     // Validates User Business Logic
     self.Validate = function(){
         // TODO: Here goes User business model validation
+        self.User.password = crypt.HashStringSync(self.User.password);
+        console.info("User validated ",self.User)
         return true;
     }
 

@@ -83,6 +83,7 @@
                     data: JSON.stringify({user: {email: $("#email").val(),password:$("#password").val()}}),
                     success: function (resp) {
                     if(resp = JSON.parse(resp), resp.success)
+                        console.info(resp.data);
                         alert("Sucess!")
                     },
                     error: function (err) {

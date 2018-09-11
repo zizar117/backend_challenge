@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/zizar117/nodejs-coding-challenge#readme",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "express-vue": "^5.7.1"
