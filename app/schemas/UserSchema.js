@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 
-var userSchema = mongoose.Schema({
+var User = mongoose.Schema({
     email:           { type: String, required: true },
     hashed_password: { type: String, required: true },
     status:          { type: String, required: true },
@@ -11,7 +11,7 @@ var userSchema = mongoose.Schema({
     deleted:         { type:Boolean, default: false }
 });
 
-userSchema.pre('save', function(next) {
+User.pre('save', function(next) {
     // get the current date
     var currentDate = new Date();
 
@@ -27,9 +27,10 @@ userSchema.pre('save', function(next) {
     next();
 });
 
-var User = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', User);
 
-exports.CreateUserSchema = function(user = undefined){
+/*
+module.exports.CreateUserSchema = function(user = undefined){
     if(user == undefined) return undefined;
 
     var userSchema = new User({
@@ -39,6 +40,6 @@ exports.CreateUserSchema = function(user = undefined){
     })
     return userSchema;
 }
-
+*/
 // make this available to our users in our Node applications
 //module.exports = User;

@@ -1,4 +1,4 @@
-var userSchema = require('../schemas/UserSchema');
+var User = require('../schemas/UserSchema');
 var mongoose = require("mongoose");
 
 var util = require('../util/util');
@@ -17,9 +17,8 @@ var UserRepository = function(){
         console.info("Success validation in Repository");
 
         self.User.status = 'init';
-        var us = userSchema.CreateUserSchema(self.User)
-
-        console.info("Success schema creation");
+        self.User.hashed_password = self.User.password;
+        //var us = userSchema.CreateUserSchema(self.User)
 
         mongoose.connect(util.GetDBurl(),function(err){
             if(err){
@@ -28,7 +27,9 @@ var UserRepository = function(){
             }
             console.info("Success MongoDB connection");
 
-            us.save(function(err){
+            let user = new User(self.User);
+
+            user.save(function(err){
                 if(err){
                     console.info("error saving",err);
                     throw err;
@@ -40,22 +41,41 @@ var UserRepository = function(){
         return self.User;
     },
 
-    self.FindUserByID = function(id){
+    self.FindUserByID = function(id,dbCallback){
 
-        if( !util.ValidateMongoID(id) ){
-            throw "Error Validating Id";
+        if( false && !util.ValidateMongoID(id) ){
+            throw "Incorrect format ID";
         }
-        var us = userSchema.CreateUserSchema(self.User)
+        console.info("idUser ",id);
 
         mongoose.connect(util.GetDBurl(),function(err){
             if(err)throw err;
 
-            us.findById(id, function(err,user){
+            User.findById(id, function(err,user){
                 if(err) throw err;
-                self.User = user;
+                console.info("User obtained: ",user);
+                return dbCallback( err,user );
             });
         });
-        return self.User;
+    },
+
+    self.FindUserByEmail = function(email, dbCallback){
+        if( !util.ValidateEmail(email) ){
+            throw "Error validating user email";
+        }
+
+        mongoose.connect(util.GetDBurl(),function(err){
+            if(err)throw err;
+
+            User.find({ email: email }, function(err,user){
+                if(err){
+                    console.info("Error FindUserByEmail",err)
+                    throw err;
+                }
+                console.info("UserRepo user found",user);
+                return dbCallback( err, user[0] );
+            });
+        });
     },
 
     // Validates User Business Logic

@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt")
+var crypto = require('crypto');
+var secretKey = "C0d1ngCh4ll3ng3";
 
 // SYNC Encryption
 exports.HashStringSync = function(str){
@@ -7,6 +9,8 @@ exports.HashStringSync = function(str){
 }
 
 exports.CompareHashSync = function(str,hash){
+    console.info(str);
+    console.info(hash);
     return bcrypt.compareSync(str,hash);
 };
 
@@ -32,3 +36,30 @@ exports.CompareHash = function(str,hash){
         return true;
     });
 }
+
+
+// ENCODE & DECODE
+exports.Encode64 = function(str){
+    var buff = new Buffer(str);  
+    return buff.toString('base64');
+}
+
+exports.Decode64 = function(str){
+    var buff = new Buffer(str, 'base64');  
+    return buff.toString('ascii');
+}
+
+// CIPHER & DECHIPER
+exports.CipherText = function(str="", algorithm="aes-256-ctr"){
+    var cipher = crypto.createCipher(algorithm,secretKey)
+    var crypted = cipher.update(str,'utf8','hex')
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
+exports.DecryptText = function(str="",algorithm="aes-256-ctr"){
+    var decipher = crypto.createDecipher(algorithm,secretKey)
+    var dec = decipher.update(str,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  }

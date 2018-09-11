@@ -4,6 +4,7 @@ var fs = require("fs")
 var DBName = "nodejschallenge";
 var URLmongoDB = 'mongodb://127.0.0.1:27017/'+ DBName;
 var regexMongoID = new RegExp("^[0-9a-fA-F]{24}$");
+var regexEmail = /(\w+)\@(\w+)\.[a-zA-Z]/g;
 
 exports.GetDBurl = function(){
     return URLmongoDB;
@@ -14,30 +15,10 @@ exports.ValidateMongoID = function(idStr){
     return regexMongoID.test(idStr);
 };
 
-exports.createJSON = function(fileName, data){
-    fs.writeFile( "./app/json/" + fileName, data , 'utf8', function (err) {
-        if (err) {
-            return err.message;
-        }
-        console.log('The file has been saved!');
-        return null;
-    });
-}
-
-exports.deleteJSONFiles = function(dirPath){
-    
-        try { var files = fs.readdirSync(dirPath); }
-        catch(e) { return "Error reading path: "+dirPath; }
-        if (files.length > 0)
-          for (var i = 0; i < files.length; i++) {
-            var filePath = dirPath + '/' + files[i];
-            if (fs.statSync(filePath).isFile())
-              fs.unlinkSync(filePath);
-            else
-            deleteJSONFiles(filePath);
-          }
-          return null;
-}
+exports.ValidateEmail = function(email){
+    if(typeof email != "string") return false;
+    return regexEmail.test(email);
+};
 
 // Search for an element in the given array
 // if finds it then returns the elem
@@ -56,4 +37,21 @@ exports.FindInArray = function(elem,array,prop=undefined){
         }
     }
     return false;
+}
+
+
+// DB CALLBACKS
+exports.GetDatFromDB = function(err,data){
+    if(err)
+        return FailureDBCallback(err);
+    else 
+        return SuccessDBCallback(data)
+}
+
+exports.FailureDBCallback = function(err){
+    console.info(err);
+}
+
+exports.SuccessDBCallback = function(data){
+    return data;
 }
