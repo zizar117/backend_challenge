@@ -4,11 +4,13 @@ var mongoose = require("mongoose");
 var util = require('../util/util');
 var crypt = require('../util/crypt');
 
+// Class to handle Connection to DB and transactions
+// In charge of mapping Query result to Business User Object
 var UserRepository = function(){
 
     var self = this;
     self.User = undefined;
-    self.CreateUser = function(){
+    self.CreateUser = function(dbCallback){
         
         console.info("Creating user in Repository");
         if( !self.Validate() ){
@@ -18,7 +20,6 @@ var UserRepository = function(){
 
         self.User.status = 'init';
         self.User.hashed_password = self.User.password;
-        //var us = userSchema.CreateUserSchema(self.User)
 
         mongoose.connect(util.GetDBurl(),function(err){
             if(err){
@@ -32,15 +33,14 @@ var UserRepository = function(){
             user.save(function(err){
                 if(err){
                     console.info("error saving",err);
-                    throw err;
                 }
-                console.log("Success")
+                console.info("Success",user)
+                return dbCallback(err,user);
             });
         });
-        
-        return self.User;
     },
 
+    // FindUserByID finds user by the given ID
     self.FindUserByID = function(id,dbCallback){
 
         if( false && !util.ValidateMongoID(id) ){
@@ -59,6 +59,7 @@ var UserRepository = function(){
         });
     },
 
+    // FindUserByEmail finds user by the given email
     self.FindUserByEmail = function(email, dbCallback){
         if( !util.ValidateEmail(email) ){
             throw "Error validating user email";
@@ -88,6 +89,7 @@ var UserRepository = function(){
 
 }
 
+// CreateUserRepository returns instance of User Repository object
 exports.CreateUserRepository = function(user = undefined){
     if(user == undefined) return undefined;
 
@@ -96,12 +98,4 @@ exports.CreateUserRepository = function(user = undefined){
     var uRepository = new UserRepository();
     uRepository.User = user;
     return uRepository;
-}
-
-function ExecuteAction(func,action){
-    // MONGOSE CONNECTION TO DB
-    mongoose.connect(util.GetDBurl(),function(err){
-        if(err)throw err;
-    });
-
 }

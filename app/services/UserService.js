@@ -1,4 +1,5 @@
 var userRepository = require('../repository/UserRepository')
+var serialize = require('../serializers/UserSerializer')
 
 // UserService applies User Object validations
 var UserService = function(){
@@ -6,13 +7,18 @@ var UserService = function(){
     self.User = undefined;
 
     // Validates User Attributes
-    self.CreateUser = function(){
+    self.CreateUser = function(callback){
         console.info("Creating user in Service");
         if( !self.Validate() ){
             throw "Invalid User Object";
         }
         console.info("Success validation in service");
-        return userRepository.CreateUserRepository(self.User).CreateUser();
+        userRepository.CreateUserRepository(self.User)
+                    .CreateUser((err,uCreated)=>{
+                        if(err || !uCreated) throw "Error Creating User";
+
+                        return callback(serialize.Serialize(uCreated,"user"));
+                    });
     }
 
     // Validaes Buisiness Object

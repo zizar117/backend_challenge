@@ -25,8 +25,10 @@ app.post('/',function(req,res){
         if( true || validateRequest(req) ){
             console.info("Success validation in server");
             var uService = userService.CreateUserService(user)
-            console.info("Success user creation");
-            res.end( JSON.stringify(responses.successResponse(uService.CreateUser(), 200, "success" )) );
+            uService.CreateUser((data)=>{
+                console.info("Success user creation");
+                res.end( JSON.stringify(responses.successResponse(data, 200, "success" )) );
+            })
         }else{
             res.end( JSON.stringify(responses.badRequest("Invalid Request",400,"Invalid request")));
         }
@@ -52,6 +54,7 @@ app.post('/auth',function(req,res){
     }
 });
 
+// Handle /hello route to prove authentication
 app.get("/hello",function(req,res){
 
     try{
@@ -72,13 +75,10 @@ app.get("/hello",function(req,res){
     }
 });
 
-
-function IsValidToken(token = undefined, action=undefined){
-    
-
-    // TODO: Integrate JWT validation
-    
-}
+// Hanbdle 404 request
+app.get('*', function(req, res){
+    res.status(404).send('Return to the light side young master!!!');
+});
 
 // Validates the incoming object attributes
 function validateRequest(req=undefined){
@@ -91,11 +91,8 @@ function validateRequest(req=undefined){
     return true;
 }
 
-
-
 // start listening on por 8081
-var server = app.listen(8081, function () {
-
+var server = app.listen(process.env.PORT || '8081', function () {
    var host = server.address().address
    var port = server.address().port
 

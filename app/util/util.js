@@ -40,7 +40,7 @@ exports.FindInArray = function(elem,array,prop=undefined){
 }
 
 
-// DB CALLBACKS
+// DB  TEST
 exports.GetDatFromDB = function(err,data){
     if(err)
         return FailureDBCallback(err);

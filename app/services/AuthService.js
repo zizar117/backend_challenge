@@ -11,7 +11,7 @@ exports.Login = function(email,password,callBack){
     console.info("AuthService Login")
     userRepo.CreateUserRepository(user)
             .FindUserByEmail(user.email,function(err,userModel){
-                if(err) throw "Error finding User By Email";
+                if(err || !userModel) throw "Error finding User By Email";
 
                 console.info("Auth service user found",userModel);
                 if(!crypt.CompareHashSync(password,userModel.hashed_password)){
@@ -25,7 +25,6 @@ exports.Login = function(email,password,callBack){
 exports.Authenticate = function(token,callBack){
     console.info("Authenticating");
     var claims = auth.ValidateToken(token);
-    console.info("claims ",claims);
 
     if(!claims) throw "Authenticate error: Invalid token";
 
