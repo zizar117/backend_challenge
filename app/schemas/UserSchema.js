@@ -3,15 +3,15 @@
 var mongoose = require('mongoose');
 
 var User = mongoose.Schema({
-    email:           { type: String, required: true },
+    email: { type: String, required: true },
     hashed_password: { type: String, required: true },
-    status:          { type: String, required: true },
-    created_at:      { type: Date, default: Date.now },
-    updated_at:      { type: Date },
-    deleted:         { type:Boolean, default: false }
+    status: { type: String, required: true },
+    created_at: { type: Date, default: Date.now },
+    updated_at: { type: Date },
+    deleted: { type: Boolean, default: false }
 });
 
-User.pre('save', function(next) {
+User.pre('save', function (next) {
     // get the current date
     var currentDate = new Date();
 
