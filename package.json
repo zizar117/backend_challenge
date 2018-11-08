@@ -2,7 +2,7 @@
   "name": "nodejs-coding-challenge",
   "version": "1.0.0",
   "engines": {
-    "node": "7.10.1",
+    "node": "11.1.0",
     "npm": "4.2.0"
   },
   "description": "NodeJS Coding Challenge",
@@ -13,7 +13,6 @@
     "install-nodexpress": "npm install express --save",
     "install-bcrypt": "npm install bcrypt",
     "install-body-parser": "npm install body-parser",
-    "install": "scripts/install.js",
     "start-mongod": "service mongod start",
     "set-up-enviroment": "scrips/enviroment.js"
   },
@@ -28,10 +27,13 @@
   },
   "homepage": "https://github.com/zizar117/nodejs-coding-challenge#readme",
   "dependencies": {
-    "bcrypt": "^3.0.0",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
-    "express-vue": "^5.7.1"
+    "express-session": "^1.15.6",
+    "express-vue": "^5.7.1",
+    "mongoose": "^5.3.10",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",
